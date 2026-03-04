@@ -1,27 +1,24 @@
-import { FormEvent, useState } from "react";
-import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
-import {
-  getSongsErrorMessage,
-  useCreateSongMutation,
-} from "@/app/_hooks/songs";
-import { Button } from "@/app/_components/ui/Button";
+import { FormEvent, useState } from "react"
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
+import { getSongsErrorMessage, useCreateSongMutation } from "@/app/_hooks/songs"
+import { Button } from "@/app/_components/ui/Button"
 
 export function SongCreateForm() {
-  const createSongMutation = useCreateSongMutation();
-  const [songTitle, setSongTitle] = useState("");
+  const createSongMutation = useCreateSongMutation()
+  const [songTitle, setSongTitle] = useState("")
 
   async function handleCreateSong(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nextTitle = songTitle.trim();
+    event.preventDefault()
+    const nextTitle = songTitle.trim()
     if (!nextTitle) {
-      return;
+      return
     }
 
     try {
-      await createSongMutation.mutateAsync(nextTitle);
-      setSongTitle("");
+      await createSongMutation.mutateAsync(nextTitle)
+      setSongTitle("")
     } catch {
-      return;
+      return
     }
   }
 
@@ -49,5 +46,5 @@ export function SongCreateForm() {
         </p>
       )}
     </>
-  );
+  )
 }

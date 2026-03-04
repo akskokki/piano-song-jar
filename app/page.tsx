@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { DrawSection } from "./_components/home/DrawSection";
-import { SongListSection } from "./_components/home/SongListSection";
+import { DrawSection } from "./_components/home/DrawSection"
+import { SongListSection } from "./_components/home/SongListSection"
 
 export default function Home() {
   return (
@@ -17,5 +17,5 @@ export default function Home() {
 
       <SongListSection />
     </main>
-  );
+  )
 }

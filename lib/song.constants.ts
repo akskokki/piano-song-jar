@@ -1,1 +1,1 @@
-export const SONG_TITLE_MAX_LENGTH = 300;
+export const SONG_TITLE_MAX_LENGTH = 300

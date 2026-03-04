@@ -4,42 +4,42 @@ import {
   useId,
   useRef,
   useState,
-} from "react";
-import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
+} from "react"
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
 import {
   useDeleteSongMutation,
   getSongsErrorMessage,
   useUpdateSongMutation,
-} from "@/app/_hooks/songs";
-import { Button } from "@/app/_components/ui/Button";
-import { Song } from "./types";
+} from "@/app/_hooks/songs"
+import { Button } from "@/app/_components/ui/Button"
+import { Song } from "./types"
 
 type SongEditModalProps = {
-  song: Song;
-  onClose: () => void;
-};
+  song: Song
+  onClose: () => void
+}
 
 function autoResizeTextarea(textarea: HTMLTextAreaElement) {
-  textarea.style.height = "auto";
-  textarea.style.height = `${textarea.scrollHeight}px`;
+  textarea.style.height = "auto"
+  textarea.style.height = `${textarea.scrollHeight}px`
 }
 
 export function SongEditModal({ song, onClose }: SongEditModalProps) {
-  const updateSongMutation = useUpdateSongMutation();
-  const deleteSongMutation = useDeleteSongMutation();
-  const titleId = useId();
-  const [editingTitle, setEditingTitle] = useState(song.title);
-  const [editingHands, setEditingHands] = useState<1 | 2>(song.hands);
-  const [isDeleteConfirming, setIsDeleteConfirming] = useState(false);
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const updateSongMutation = useUpdateSongMutation()
+  const deleteSongMutation = useDeleteSongMutation()
+  const titleId = useId()
+  const [editingTitle, setEditingTitle] = useState(song.title)
+  const [editingHands, setEditingHands] = useState<1 | 2>(song.hands)
+  const [isDeleteConfirming, setIsDeleteConfirming] = useState(false)
+  const dialogRef = useRef<HTMLDivElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
-    const textarea = textareaRef.current;
+    const textarea = textareaRef.current
     if (textarea) {
-      autoResizeTextarea(textarea);
-      textarea.focus();
-      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      autoResizeTextarea(textarea)
+      textarea.focus()
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length)
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -48,28 +48,27 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         !updateSongMutation.isPending &&
         !deleteSongMutation.isPending
       ) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown)
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [deleteSongMutation.isPending, onClose, updateSongMutation.isPending]);
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [deleteSongMutation.isPending, onClose, updateSongMutation.isPending])
 
-  const isPending =
-    updateSongMutation.isPending || deleteSongMutation.isPending;
+  const isPending = updateSongMutation.isPending || deleteSongMutation.isPending
 
   function handleDialogKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
     if (event.key !== "Tab") {
-      return;
+      return
     }
 
-    const container = dialogRef.current;
+    const container = dialogRef.current
     if (!container) {
-      return;
+      return
     }
 
     const focusableSelectors = [
@@ -79,49 +78,49 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
       "select:not([disabled])",
       "a[href]",
       '[tabindex]:not([tabindex="-1"])',
-    ];
+    ]
 
     const focusableElements = Array.from(
       container.querySelectorAll<HTMLElement>(focusableSelectors.join(",")),
-    ).filter((element) => !element.hasAttribute("disabled"));
+    ).filter((element) => !element.hasAttribute("disabled"))
 
     if (focusableElements.length === 0) {
-      event.preventDefault();
-      return;
+      event.preventDefault()
+      return
     }
 
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-    const activeElement = document.activeElement as HTMLElement | null;
+    const firstElement = focusableElements[0]
+    const lastElement = focusableElements[focusableElements.length - 1]
+    const activeElement = document.activeElement as HTMLElement | null
 
     if (event.shiftKey) {
       if (
         activeElement === firstElement ||
         !container.contains(activeElement)
       ) {
-        event.preventDefault();
-        lastElement.focus();
+        event.preventDefault()
+        lastElement.focus()
       }
-      return;
+      return
     }
 
     if (activeElement === lastElement || !container.contains(activeElement)) {
-      event.preventDefault();
-      firstElement.focus();
+      event.preventDefault()
+      firstElement.focus()
     }
   }
 
-  const trimmedTitle = editingTitle.trim();
-  const hasChanges = trimmedTitle !== song.title || editingHands !== song.hands;
+  const trimmedTitle = editingTitle.trim()
+  const hasChanges = trimmedTitle !== song.title || editingHands !== song.hands
   const isSaveDisabled =
     isPending ||
     !trimmedTitle ||
     trimmedTitle.length > SONG_TITLE_MAX_LENGTH ||
-    !hasChanges;
+    !hasChanges
 
   async function handleSave() {
     if (isSaveDisabled) {
-      return;
+      return
     }
 
     try {
@@ -129,29 +128,29 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         songId: song.id,
         title: trimmedTitle !== song.title ? trimmedTitle : undefined,
         hands: editingHands !== song.hands ? editingHands : undefined,
-      });
+      })
 
-      onClose();
+      onClose()
     } catch {
-      return;
+      return
     }
   }
 
   async function handleDelete() {
     if (isPending) {
-      return;
+      return
     }
 
     if (!isDeleteConfirming) {
-      setIsDeleteConfirming(true);
-      return;
+      setIsDeleteConfirming(true)
+      return
     }
 
     try {
-      await deleteSongMutation.mutateAsync({ songId: song.id });
-      onClose();
+      await deleteSongMutation.mutateAsync({ songId: song.id })
+      onClose()
     } catch {
-      return;
+      return
     }
   }
 
@@ -160,7 +159,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !isPending) {
-          onClose();
+          onClose()
         }
       }}
     >
@@ -187,8 +186,8 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
           ref={textareaRef}
           value={editingTitle}
           onChange={(event) => {
-            setEditingTitle(event.target.value);
-            autoResizeTextarea(event.currentTarget);
+            setEditingTitle(event.target.value)
+            autoResizeTextarea(event.currentTarget)
           }}
           rows={1}
           maxLength={SONG_TITLE_MAX_LENGTH}
@@ -229,7 +228,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         <div className="mt-4 flex items-center justify-between gap-2">
           <Button
             onClick={() => {
-              void handleDelete();
+              void handleDelete()
             }}
             disabled={isPending}
             className="px-3 text-red-600"
@@ -241,11 +240,11 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
             <Button
               onClick={() => {
                 if (isDeleteConfirming) {
-                  setIsDeleteConfirming(false);
-                  return;
+                  setIsDeleteConfirming(false)
+                  return
                 }
 
-                onClose();
+                onClose()
               }}
               disabled={isPending}
               className="px-3"
@@ -254,7 +253,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
             </Button>
             <Button
               onClick={() => {
-                void handleSave();
+                void handleSave()
               }}
               disabled={isSaveDisabled}
               variant="solid"
@@ -265,5 +264,5 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,13 +1,13 @@
-import { ChevronDownIcon } from 'lucide-react';
-import { useState } from 'react';
-import { useGetSongsQuery } from '@/app/_hooks/songs';
-import { SongCreateForm } from './SongCreateForm';
-import { SongListItem } from './SongListItem';
+import { ChevronDownIcon } from "lucide-react"
+import { useState } from "react"
+import { useGetSongsQuery } from "@/app/_hooks/songs"
+import { SongCreateForm } from "./SongCreateForm"
+import { SongListItem } from "./SongListItem"
 
 export function SongListSection() {
-  const { songs, isPending, errorMessage: queryError } = useGetSongsQuery();
+  const { songs, isPending, errorMessage: queryError } = useGetSongsQuery()
 
-  const [songsExpanded, setSongsExpanded] = useState(false);
+  const [songsExpanded, setSongsExpanded] = useState(false)
 
   return (
     <section className="rounded-lg border border-zinc-200 p-4">
@@ -59,5 +59,5 @@ export function SongListSection() {
         </>
       )}
     </section>
-  );
+  )
 }

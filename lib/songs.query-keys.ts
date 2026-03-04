@@ -4,4 +4,4 @@ export const songsQueryKeys = {
   list: () => [...songsQueryKeys.lists()] as const,
   details: () => [...songsQueryKeys.all, "detail"] as const,
   detail: (songId: string) => [...songsQueryKeys.details(), songId] as const,
-};
+}

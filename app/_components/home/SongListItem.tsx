@@ -1,16 +1,16 @@
-import { PencilIcon } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/app/_components/ui/Button";
-import { SongEditModal } from "./SongEditModal";
-import { LastPlayedLabel } from "./LastPlayedLabel";
-import { Song } from "./types";
+import { PencilIcon } from "lucide-react"
+import { useState } from "react"
+import { Button } from "@/app/_components/ui/Button"
+import { SongEditModal } from "./SongEditModal"
+import { LastPlayedLabel } from "./LastPlayedLabel"
+import { Song } from "./types"
 
 type SongListItemProps = {
-  song: Song;
-};
+  song: Song
+}
 
 export function SongListItem({ song }: SongListItemProps) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   return (
     <li className="rounded-md border border-zinc-200 p-3 text-sm">
@@ -37,5 +37,5 @@ export function SongListItem({ song }: SongListItemProps) {
         <SongEditModal song={song} onClose={() => setIsEditModalOpen(false)} />
       )}
     </li>
-  );
+  )
 }

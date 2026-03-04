@@ -1,65 +1,65 @@
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, XIcon } from "lucide-react"
 import {
   getSongsErrorMessage,
   useGetSongsQuery,
   useMarkSongPlayedMutation,
-} from "@/app/_hooks/songs";
-import { useMemo, useState } from "react";
-import { Button } from "@/app/_components/ui/Button";
-import { LastPlayedLabel } from "./LastPlayedLabel";
-import { SongEditModal } from "./SongEditModal";
+} from "@/app/_hooks/songs"
+import { useMemo, useState } from "react"
+import { Button } from "@/app/_components/ui/Button"
+import { LastPlayedLabel } from "./LastPlayedLabel"
+import { SongEditModal } from "./SongEditModal"
 
 export function DrawSection() {
-  const { songs } = useGetSongsQuery();
-  const markSongPlayedMutation = useMarkSongPlayedMutation();
-  const [drawnSongId, setDrawnSongId] = useState<string | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const { songs } = useGetSongsQuery()
+  const markSongPlayedMutation = useMarkSongPlayedMutation()
+  const [drawnSongId, setDrawnSongId] = useState<string | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   const drawnSong = useMemo(
     () => songs.find((song) => song.id === drawnSongId) ?? null,
     [drawnSongId, songs],
-  );
+  )
 
   function pickRandomSongId(excludeSongId?: string) {
     const candidates = excludeSongId
       ? songs.filter((song) => song.id !== excludeSongId)
-      : songs;
+      : songs
 
     if (candidates.length === 0) {
-      return songs.length > 0 ? songs[0].id : null;
+      return songs.length > 0 ? songs[0].id : null
     }
 
-    const index = Math.floor(Math.random() * candidates.length);
-    return candidates[index].id;
+    const index = Math.floor(Math.random() * candidates.length)
+    return candidates[index].id
   }
 
   function drawRandomSong(excludeSongId?: string) {
-    markSongPlayedMutation.reset();
-    setDrawnSongId(pickRandomSongId(excludeSongId));
+    markSongPlayedMutation.reset()
+    setDrawnSongId(pickRandomSongId(excludeSongId))
   }
 
   function skipDrawnSong() {
     if (!drawnSong) {
-      return;
+      return
     }
 
-    drawRandomSong(drawnSong.id);
+    drawRandomSong(drawnSong.id)
   }
 
   async function markDrawnSongPlayed() {
     if (!drawnSong) {
-      return;
+      return
     }
 
-    const songId = drawnSong.id;
-    const previousDrawnSongId = drawnSongId;
+    const songId = drawnSong.id
+    const previousDrawnSongId = drawnSongId
 
-    drawRandomSong(songId);
+    drawRandomSong(songId)
 
     try {
-      await markSongPlayedMutation.mutateAsync({ songId });
+      await markSongPlayedMutation.mutateAsync({ songId })
     } catch {
-      setDrawnSongId(previousDrawnSongId);
+      setDrawnSongId(previousDrawnSongId)
     }
   }
 
@@ -131,5 +131,5 @@ export function DrawSection() {
         </p>
       )}
     </section>
-  );
+  )
 }
