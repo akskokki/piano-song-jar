@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
+import { SongResponse, SongsResponse, ErrorResponse } from "@/lib/songs.types"
+import { toSong, toSongs } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -13,7 +15,7 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   })
 
-  return NextResponse.json({ songs })
+  return NextResponse.json<SongsResponse>({ songs: toSongs(songs) })
 }
 
 export async function POST(request: Request) {
@@ -21,7 +23,10 @@ export async function POST(request: Request) {
   const parsed = createSongSchema.safeParse(json)
 
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid song payload" }, { status: 400 })
+    return NextResponse.json<ErrorResponse>(
+      { error: "Invalid song payload" },
+      { status: 400 },
+    )
   }
 
   const song = await prisma.song.create({
@@ -31,5 +36,8 @@ export async function POST(request: Request) {
     },
   })
 
-  return NextResponse.json({ song }, { status: 201 })
+  return NextResponse.json<SongResponse>(
+    { song: toSong(song) },
+    { status: 201 },
+  )
 }

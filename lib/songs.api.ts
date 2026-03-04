@@ -1,82 +1,78 @@
-import { Song, SongActivityType, SongUpdateInput } from "@/lib/songs.types"
+import axios, { AxiosError } from "axios"
+import {
+  SongActivityType,
+  SongUpdateInput,
+  SongResponse,
+  SongsResponse,
+} from "@/lib/songs.types"
 
-type ApiErrorBody = {
-  error?: string
-}
+const apiClient = axios.create({
+  headers: { "Content-Type": "application/json" },
+})
 
-async function parseApiError(
-  response: Response,
-  fallbackMessage: string,
-): Promise<Error> {
-  try {
-    const result = (await response.json()) as ApiErrorBody
-    return new Error(result.error ?? fallbackMessage)
-  } catch {
-    return new Error(fallbackMessage)
+function parseApiError(error: unknown, fallbackMessage: string): Error {
+  if (error instanceof AxiosError) {
+    const errorMessage = error.response?.data?.error
+
+    if (typeof errorMessage === "string" && errorMessage.length > 0) {
+      return new Error(errorMessage)
+    }
   }
+
+  return new Error(fallbackMessage)
 }
 
 export async function fetchSongs() {
-  const response = await fetch("/api/songs")
-  if (!response.ok) {
-    throw await parseApiError(response, "Could not load songs")
+  try {
+    const { data } = await apiClient.get<SongsResponse>("/api/songs")
+    return data.songs
+  } catch (error) {
+    throw parseApiError(error, "Could not load songs")
   }
-
-  const result = (await response.json()) as { songs: Song[] }
-  return result.songs
 }
 
 export async function createSong(title: string) {
-  const response = await fetch("/api/songs", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title }),
-  })
+  try {
+    const { data } = await apiClient.post<SongResponse>("/api/songs", {
+      title,
+    })
 
-  if (!response.ok) {
-    throw await parseApiError(response, "Could not create song")
+    return data.song
+  } catch (error) {
+    throw parseApiError(error, "Could not create song")
   }
-
-  const result = (await response.json()) as { song: Song }
-  return result.song
 }
 
 export async function updateSong(songId: string, data: SongUpdateInput) {
-  const response = await fetch(`/api/songs/${songId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
+  try {
+    const { data: responseData } = await apiClient.patch<SongResponse>(
+      `/api/songs/${songId}`,
+      data,
+    )
 
-  if (!response.ok) {
-    throw await parseApiError(response, "Could not update song")
+    return responseData.song
+  } catch (error) {
+    throw parseApiError(error, "Could not update song")
   }
-
-  const result = (await response.json()) as { song: Song }
-  return result.song
 }
 
 export async function markSongActivity(songId: string, type: SongActivityType) {
-  const response = await fetch(`/api/songs/${songId}/activity`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ type }),
-  })
+  try {
+    const { data } = await apiClient.post<SongResponse>(
+      `/api/songs/${songId}/activity`,
+      { type },
+    )
 
-  if (!response.ok) {
-    throw await parseApiError(response, "Could not update song activity")
+    return data.song
+  } catch (error) {
+    throw parseApiError(error, "Could not update song activity")
   }
-
-  const result = (await response.json()) as { song: Song }
-  return result.song
 }
 
 export async function deleteSong(songId: string) {
-  const response = await fetch(`/api/songs/${songId}`, {
-    method: "DELETE",
-  })
-
-  if (!response.ok) {
-    throw await parseApiError(response, "Could not delete song")
+  try {
+    await apiClient.delete(`/api/songs/${songId}`)
+  } catch (error) {
+    throw parseApiError(error, "Could not delete song")
   }
 }

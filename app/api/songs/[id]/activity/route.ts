@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma"
+import { SongResponse, ErrorResponse } from "@/lib/songs.types"
+import { toSong } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -16,7 +18,7 @@ export async function POST(request: Request, { params }: Params) {
   const parsed = updateSongActivitySchema.safeParse(json)
 
   if (!parsed.success) {
-    return NextResponse.json(
+    return NextResponse.json<ErrorResponse>(
       { error: "Invalid song activity payload" },
       { status: 400 },
     )
@@ -28,7 +30,10 @@ export async function POST(request: Request, { params }: Params) {
   })
 
   if (!existingSong) {
-    return NextResponse.json({ error: "Song not found" }, { status: 404 })
+    return NextResponse.json<ErrorResponse>(
+      { error: "Song not found" },
+      { status: 404 },
+    )
   }
 
   const song = await prisma.song.update({
@@ -39,5 +44,5 @@ export async function POST(request: Request, { params }: Params) {
         : { lastSkippedAt: new Date() },
   })
 
-  return NextResponse.json({ song })
+  return NextResponse.json<SongResponse>({ song: toSong(song) })
 }

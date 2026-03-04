@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
+import { SongResponse, SuccessResponse, ErrorResponse } from "@/lib/songs.types"
+import { toSong } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -22,7 +24,10 @@ export async function PATCH(request: Request, { params }: Params) {
   const parsed = updateSongSchema.safeParse(json)
 
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid song payload" }, { status: 400 })
+    return NextResponse.json<ErrorResponse>(
+      { error: "Invalid song payload" },
+      { status: 400 },
+    )
   }
 
   const existingSong = await prisma.song.findUnique({
@@ -31,7 +36,10 @@ export async function PATCH(request: Request, { params }: Params) {
   })
 
   if (!existingSong) {
-    return NextResponse.json({ error: "Song not found" }, { status: 404 })
+    return NextResponse.json<ErrorResponse>(
+      { error: "Song not found" },
+      { status: 404 },
+    )
   }
 
   const song = await prisma.song.update({
@@ -39,7 +47,7 @@ export async function PATCH(request: Request, { params }: Params) {
     data: parsed.data,
   })
 
-  return NextResponse.json({ song })
+  return NextResponse.json<SongResponse>({ song: toSong(song) })
 }
 
 export async function DELETE(_request: Request, { params }: Params) {
@@ -51,10 +59,13 @@ export async function DELETE(_request: Request, { params }: Params) {
   })
 
   if (!existingSong) {
-    return NextResponse.json({ error: "Song not found" }, { status: 404 })
+    return NextResponse.json<ErrorResponse>(
+      { error: "Song not found" },
+      { status: 404 },
+    )
   }
 
   await prisma.song.delete({ where: { id } })
 
-  return NextResponse.json({ success: true })
+  return NextResponse.json<SuccessResponse>({ success: true })
 }
