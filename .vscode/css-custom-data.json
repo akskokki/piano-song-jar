@@ -1,0 +1,25 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Tailwind CSS v4 theme definition block"
+    },
+    {
+      "name": "@utility",
+      "description": "Tailwind CSS v4 custom utility rule"
+    },
+    {
+      "name": "@variant",
+      "description": "Tailwind CSS v4 variant wrapper"
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Tailwind CSS v4 custom variant definition"
+    },
+    {
+      "name": "@source",
+      "description": "Tailwind CSS v4 source registration"
+    }
+  ]
+}
