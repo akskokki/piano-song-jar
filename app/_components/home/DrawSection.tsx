@@ -1,8 +1,8 @@
-import { CheckIcon, XIcon } from 'lucide-react';
+import { CheckIcon, PencilIcon, XIcon } from 'lucide-react';
 import {
   getSongsErrorMessage,
   useGetSongsQuery,
-  useMarkSongPlayedMutation,
+  useMarkSongActivityMutation,
 } from '@/app/_hooks/songs';
 import { useMemo, useState } from 'react';
 import { Button } from '@/app/_components/ui/Button';
@@ -11,7 +11,7 @@ import { SongEditModal } from './SongEditModal';
 
 export function DrawSection() {
   const { songs } = useGetSongsQuery();
-  const markSongPlayedMutation = useMarkSongPlayedMutation();
+  const markSongActivityMutation = useMarkSongActivityMutation();
   const [drawnSongId, setDrawnSongId] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -34,16 +34,25 @@ export function DrawSection() {
   }
 
   function drawRandomSong(excludeSongId?: string) {
-    markSongPlayedMutation.reset();
+    markSongActivityMutation.reset();
     setDrawnSongId(pickRandomSongId(excludeSongId));
   }
 
-  function skipDrawnSong() {
+  async function skipDrawnSong() {
     if (!drawnSong) {
       return;
     }
 
-    drawRandomSong(drawnSong.id);
+    const songId = drawnSong.id;
+    const previousDrawnSongId = drawnSongId;
+
+    drawRandomSong(songId);
+
+    try {
+      await markSongActivityMutation.mutateAsync({ songId, type: 'skipped' });
+    } catch {
+      setDrawnSongId(previousDrawnSongId);
+    }
   }
 
   async function markDrawnSongPlayed() {
@@ -57,7 +66,7 @@ export function DrawSection() {
     drawRandomSong(songId);
 
     try {
-      await markSongPlayedMutation.mutateAsync({ songId });
+      await markSongActivityMutation.mutateAsync({ songId, type: 'played' });
     } catch {
       setDrawnSongId(previousDrawnSongId);
     }
@@ -98,8 +107,9 @@ export function DrawSection() {
                 onClick={() => setIsEditModalOpen(true)}
                 variant="ghost"
                 size="sm"
-                className="mt-1 h-auto text-xs underline underline-offset-2"
+                className="mt-2 h-auto text-xs"
                 hitSlop={8}
+                icon={<PencilIcon size={12} />}
               >
                 Edit
               </Button>
@@ -123,11 +133,11 @@ export function DrawSection() {
         />
       )}
 
-      {markSongPlayedMutation.error && (
+      {markSongActivityMutation.error && (
         <p className="mt-3 text-sm text-red-600">
           {getSongsErrorMessage(
-            markSongPlayedMutation.error,
-            'Could not mark song as played',
+            markSongActivityMutation.error,
+            'Could not update song activity',
           )}
         </p>
       )}

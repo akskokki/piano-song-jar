@@ -19,5 +19,6 @@ model Song {
   title        String
   hands        Int       @default(2)
   lastPlayedAt DateTime? @db.Timestamptz(3)
+  lastSkippedAt DateTime? @db.Timestamptz(3)
   createdAt    DateTime  @default(now()) @db.Timestamptz(3)
 }
