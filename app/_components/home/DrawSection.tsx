@@ -6,6 +6,7 @@ import {
 } from "@/app/_hooks/songs";
 import { useMemo, useState } from "react";
 import { Button } from "@/app/_components/ui/Button";
+import { LastPlayedLabel } from "./LastPlayedLabel";
 import { SongEditModal } from "./SongEditModal";
 
 export function DrawSection() {
@@ -92,6 +93,7 @@ export function DrawSection() {
               <p className="mt-1 text-xs text-zinc-500">
                 {drawnSong.hands === 2 ? "🙌 2 hands" : "✋ 1 hand"}
               </p>
+              <LastPlayedLabel lastPlayedAt={drawnSong.lastPlayedAt} />
               <Button
                 onClick={() => setIsEditModalOpen(true)}
                 variant="ghost"

@@ -2,6 +2,7 @@ import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/app/_components/ui/Button";
 import { SongEditModal } from "./SongEditModal";
+import { LastPlayedLabel } from "./LastPlayedLabel";
 import { Song } from "./types";
 
 type SongListItemProps = {
@@ -19,6 +20,7 @@ export function SongListItem({ song }: SongListItemProps) {
           <p className="mt-1 text-xs text-zinc-500">
             {song.hands === 2 ? "🙌 2 hands" : "✋ 1 hand"}
           </p>
+          <LastPlayedLabel lastPlayedAt={song.lastPlayedAt} />
         </div>
 
         <Button
