@@ -1,4 +1,11 @@
 {
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true,
+  "prettier.prettierPath": "node_modules/prettier",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
   "prisma.pinToPrisma6": true,
   "css.lint.unknownAtRules": "warning",
   "css.customData": [".vscode/css-custom-data.json"]
