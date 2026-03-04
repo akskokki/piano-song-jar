@@ -1,7 +1,7 @@
-import { prisma } from '@/lib/prisma';
-import { SONG_TITLE_MAX_LENGTH } from '@/lib/song.constants';
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import { prisma } from "@/lib/prisma";
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
 const createSongSchema = z.object({
   title: z.string().trim().min(1).max(SONG_TITLE_MAX_LENGTH),
@@ -10,7 +10,7 @@ const createSongSchema = z.object({
 
 export async function GET() {
   const songs = await prisma.song.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 
   return NextResponse.json({ songs });
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Invalid song payload' },
+      { error: "Invalid song payload" },
       { status: 400 },
     );
   }

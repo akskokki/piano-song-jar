@@ -4,17 +4,17 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from '@tanstack/react-query';
-import { SONG_TITLE_MAX_LENGTH } from '@/lib/song.constants';
+} from "@tanstack/react-query";
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
 import {
   createSong as createSongApi,
   deleteSong,
   fetchSongs,
   markSongPlayed,
   updateSong,
-} from '@/lib/songs.api';
-import { songsQueryKeys } from '@/lib/songs.query-keys';
-import { Song, SongUpdateInput } from '@/lib/songs.types';
+} from "@/lib/songs.api";
+import { songsQueryKeys } from "@/lib/songs.query-keys";
+import { Song, SongUpdateInput } from "@/lib/songs.types";
 
 function getErrorMessage(error: unknown, fallbackMessage: string) {
   return error instanceof Error ? error.message : fallbackMessage;
@@ -53,8 +53,8 @@ function patchSongInSongsCache(
       song.id === songId
         ? {
             ...song,
-            ...(typeof patch.title === 'string' ? { title: patch.title } : {}),
-            ...(typeof patch.hands === 'number' ? { hands: patch.hands } : {}),
+            ...(typeof patch.title === "string" ? { title: patch.title } : {}),
+            ...(typeof patch.hands === "number" ? { hands: patch.hands } : {}),
           }
         : song,
     ),
@@ -72,7 +72,7 @@ export function useGetSongsQuery() {
   return {
     ...songsQuery,
     songs: songsQuery.data ?? [],
-    errorMessage: getErrorMessage(songsQuery.error, ''),
+    errorMessage: getErrorMessage(songsQuery.error, ""),
   };
 }
 

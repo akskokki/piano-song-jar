@@ -1,8 +1,8 @@
-import { PencilIcon } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '@/app/_components/ui/Button';
-import { SongEditModal } from './SongEditModal';
-import { Song } from './types';
+import { PencilIcon } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/app/_components/ui/Button";
+import { SongEditModal } from "./SongEditModal";
+import { Song } from "./types";
 
 type SongListItemProps = {
   song: Song;
@@ -17,7 +17,7 @@ export function SongListItem({ song }: SongListItemProps) {
         <div className="min-w-0 flex-1">
           <p className="font-medium wrap-break-word">{song.title}</p>
           <p className="mt-1 text-xs text-zinc-500">
-            {song.hands === 2 ? '🙌 2 hands' : '✋ 1 hand'}
+            {song.hands === 2 ? "🙌 2 hands" : "✋ 1 hand"}
           </p>
         </div>
 

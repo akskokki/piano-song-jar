@@ -4,15 +4,15 @@ import {
   useId,
   useRef,
   useState,
-} from 'react';
-import { SONG_TITLE_MAX_LENGTH } from '@/lib/song.constants';
+} from "react";
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
 import {
   useDeleteSongMutation,
   getSongsErrorMessage,
   useUpdateSongMutation,
-} from '@/app/_hooks/songs';
-import { Button } from '@/app/_components/ui/Button';
-import { Song } from './types';
+} from "@/app/_hooks/songs";
+import { Button } from "@/app/_components/ui/Button";
+import { Song } from "./types";
 
 type SongEditModalProps = {
   song: Song;
@@ -20,7 +20,7 @@ type SongEditModalProps = {
 };
 
 function autoResizeTextarea(textarea: HTMLTextAreaElement) {
-  textarea.style.height = 'auto';
+  textarea.style.height = "auto";
   textarea.style.height = `${textarea.scrollHeight}px`;
 }
 
@@ -44,7 +44,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
-        event.key === 'Escape' &&
+        event.key === "Escape" &&
         !updateSongMutation.isPending &&
         !deleteSongMutation.isPending
       ) {
@@ -52,10 +52,10 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [deleteSongMutation.isPending, onClose, updateSongMutation.isPending]);
 
@@ -63,7 +63,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
     updateSongMutation.isPending || deleteSongMutation.isPending;
 
   function handleDialogKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
-    if (event.key !== 'Tab') {
+    if (event.key !== "Tab") {
       return;
     }
 
@@ -73,17 +73,17 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
     }
 
     const focusableSelectors = [
-      'button:not([disabled])',
-      'textarea:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'a[href]',
+      "button:not([disabled])",
+      "textarea:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "a[href]",
       '[tabindex]:not([tabindex="-1"])',
     ];
 
     const focusableElements = Array.from(
-      container.querySelectorAll<HTMLElement>(focusableSelectors.join(',')),
-    ).filter((element) => !element.hasAttribute('disabled'));
+      container.querySelectorAll<HTMLElement>(focusableSelectors.join(",")),
+    ).filter((element) => !element.hasAttribute("disabled"));
 
     if (focusableElements.length === 0) {
       event.preventDefault();
@@ -207,11 +207,11 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
             size="md"
             className="min-w-24 px-3"
             aria-label={
-              editingHands === 1 ? 'Set to two hands' : 'Set to one hand'
+              editingHands === 1 ? "Set to two hands" : "Set to one hand"
             }
-            icon={<span>{editingHands === 2 ? '🙌' : '✋'}</span>}
+            icon={<span>{editingHands === 2 ? "🙌" : "✋"}</span>}
           >
-            <span>{editingHands === 2 ? '2 hands' : '1 hand'}</span>
+            <span>{editingHands === 2 ? "2 hands" : "1 hand"}</span>
           </Button>
         </div>
 
@@ -220,8 +220,8 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
             {getSongsErrorMessage(
               updateSongMutation.error ?? deleteSongMutation.error,
               updateSongMutation.error
-                ? 'Could not update song'
-                : 'Could not delete song',
+                ? "Could not update song"
+                : "Could not delete song",
             )}
           </p>
         )}
@@ -234,7 +234,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
             disabled={isPending}
             className="px-3 text-red-600"
           >
-            {isDeleteConfirming ? 'Confirm delete' : 'Delete'}
+            {isDeleteConfirming ? "Confirm delete" : "Delete"}
           </Button>
 
           <div className="flex items-center justify-end gap-2">
@@ -250,7 +250,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
               disabled={isPending}
               className="px-3"
             >
-              {isDeleteConfirming ? 'Keep song' : 'Cancel'}
+              {isDeleteConfirming ? "Keep song" : "Cancel"}
             </Button>
             <Button
               onClick={() => {

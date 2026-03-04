@@ -1,12 +1,12 @@
-import { CheckIcon, XIcon } from 'lucide-react';
+import { CheckIcon, XIcon } from "lucide-react";
 import {
   getSongsErrorMessage,
   useGetSongsQuery,
   useMarkSongPlayedMutation,
-} from '@/app/_hooks/songs';
-import { useMemo, useState } from 'react';
-import { Button } from '@/app/_components/ui/Button';
-import { SongEditModal } from './SongEditModal';
+} from "@/app/_hooks/songs";
+import { useMemo, useState } from "react";
+import { Button } from "@/app/_components/ui/Button";
+import { SongEditModal } from "./SongEditModal";
 
 export function DrawSection() {
   const { songs } = useGetSongsQuery();
@@ -90,7 +90,7 @@ export function DrawSection() {
                 {drawnSong.title}
               </p>
               <p className="mt-1 text-xs text-zinc-500">
-                {drawnSong.hands === 2 ? '🙌 2 hands' : '✋ 1 hand'}
+                {drawnSong.hands === 2 ? "🙌 2 hands" : "✋ 1 hand"}
               </p>
               <Button
                 onClick={() => setIsEditModalOpen(true)}
@@ -124,7 +124,7 @@ export function DrawSection() {
         <p className="mt-3 text-sm text-red-600">
           {getSongsErrorMessage(
             markSongPlayedMutation.error,
-            'Could not mark song as played',
+            "Could not mark song as played",
           )}
         </p>
       )}

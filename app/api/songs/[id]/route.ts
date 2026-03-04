@@ -1,7 +1,7 @@
-import { prisma } from '@/lib/prisma';
-import { SONG_TITLE_MAX_LENGTH } from '@/lib/song.constants';
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import { prisma } from "@/lib/prisma";
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
 const updateSongSchema = z
   .object({
@@ -9,7 +9,7 @@ const updateSongSchema = z
     hands: z.union([z.literal(1), z.literal(2)]).optional(),
   })
   .refine((data) => data.title !== undefined || data.hands !== undefined, {
-    message: 'No update fields provided',
+    message: "No update fields provided",
   });
 
 type Params = {
@@ -23,7 +23,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   if (!parsed.success) {
     return NextResponse.json(
-      { error: 'Invalid song payload' },
+      { error: "Invalid song payload" },
       { status: 400 },
     );
   }
@@ -34,7 +34,7 @@ export async function PATCH(request: Request, { params }: Params) {
   });
 
   if (!existingSong) {
-    return NextResponse.json({ error: 'Song not found' }, { status: 404 });
+    return NextResponse.json({ error: "Song not found" }, { status: 404 });
   }
 
   const song = await prisma.song.update({
@@ -54,7 +54,7 @@ export async function DELETE(_request: Request, { params }: Params) {
   });
 
   if (!existingSong) {
-    return NextResponse.json({ error: 'Song not found' }, { status: 404 });
+    return NextResponse.json({ error: "Song not found" }, { status: 404 });
   }
 
   await prisma.song.delete({ where: { id } });

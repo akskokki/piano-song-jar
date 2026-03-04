@@ -1,1 +1,1 @@
-export type { Song } from '@/lib/songs.types';
+export type { Song } from "@/lib/songs.types";

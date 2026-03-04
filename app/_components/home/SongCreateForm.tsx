@@ -1,14 +1,14 @@
-import { FormEvent, useState } from 'react';
-import { SONG_TITLE_MAX_LENGTH } from '@/lib/song.constants';
+import { FormEvent, useState } from "react";
+import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants";
 import {
   getSongsErrorMessage,
   useCreateSongMutation,
-} from '@/app/_hooks/songs';
-import { Button } from '@/app/_components/ui/Button';
+} from "@/app/_hooks/songs";
+import { Button } from "@/app/_components/ui/Button";
 
 export function SongCreateForm() {
   const createSongMutation = useCreateSongMutation();
-  const [songTitle, setSongTitle] = useState('');
+  const [songTitle, setSongTitle] = useState("");
 
   async function handleCreateSong(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,7 +19,7 @@ export function SongCreateForm() {
 
     try {
       await createSongMutation.mutateAsync(nextTitle);
-      setSongTitle('');
+      setSongTitle("");
     } catch {
       return;
     }
@@ -44,7 +44,7 @@ export function SongCreateForm() {
         <p className="mb-3 text-sm text-red-600">
           {getSongsErrorMessage(
             createSongMutation.error,
-            'Could not create song',
+            "Could not create song",
           )}
         </p>
       )}
