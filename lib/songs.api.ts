@@ -68,3 +68,13 @@ export async function markSongPlayed(songId: string) {
   const result = (await response.json()) as { song: Song };
   return result.song;
 }
+
+export async function deleteSong(songId: string) {
+  const response = await fetch(`/api/songs/${songId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw await parseApiError(response, 'Could not delete song');
+  }
+}

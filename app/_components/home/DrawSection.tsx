@@ -5,11 +5,14 @@ import {
   useMarkSongPlayedMutation,
 } from '@/app/_hooks/songs';
 import { useMemo, useState } from 'react';
+import { Button } from '@/app/_components/ui/Button';
+import { SongEditModal } from './SongEditModal';
 
 export function DrawSection() {
   const { songs } = useGetSongsQuery();
   const markSongPlayedMutation = useMarkSongPlayedMutation();
   const [drawnSongId, setDrawnSongId] = useState<string | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const drawnSong = useMemo(
     () => songs.find((song) => song.id === drawnSongId) ?? null,
@@ -63,26 +66,24 @@ export function DrawSection() {
     <section className="rounded-lg border border-zinc-200 p-4">
       <h2 className="mb-3 text-sm font-medium">Draw random song</h2>
       {!drawnSong ? (
-        <button
-          type="button"
+        <Button
           onClick={() => drawRandomSong()}
           disabled={songs.length === 0}
-          className="h-24 w-full rounded-md bg-foreground px-4 text-base font-semibold text-background disabled:opacity-50"
+          variant="solid"
+          className="h-24 w-full text-base font-semibold"
         >
           Draw Song
-        </button>
+        </Button>
       ) : (
         <div className="mt-3 rounded-md border border-zinc-200 p-3">
           <div className="flex items-center justify-between gap-2">
-            <button
-              type="button"
+            <Button
               onClick={skipDrawnSong}
               aria-label="Skip song"
               title="Skip"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-zinc-300"
-            >
-              <XIcon size={16} />
-            </button>
+              size="icon"
+              icon={<XIcon size={16} />}
+            ></Button>
 
             <div className="min-w-0 flex-1 px-2 text-center">
               <p className="text-base font-medium wrap-break-word">
@@ -91,19 +92,32 @@ export function DrawSection() {
               <p className="mt-1 text-xs text-zinc-500">
                 {drawnSong.hands === 2 ? '🙌 2 hands' : '✋ 1 hand'}
               </p>
+              <Button
+                onClick={() => setIsEditModalOpen(true)}
+                variant="ghost"
+                size="sm"
+                className="mt-1 h-auto px-0 text-xs underline underline-offset-2"
+              >
+                Edit
+              </Button>
             </div>
 
-            <button
-              type="button"
+            <Button
               onClick={() => void markDrawnSongPlayed()}
               aria-label="Mark song as played"
               title="Played"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-zinc-300"
-            >
-              <CheckIcon size={16} />
-            </button>
+              size="icon"
+              icon={<CheckIcon size={16} />}
+            ></Button>
           </div>
         </div>
+      )}
+
+      {drawnSong && isEditModalOpen && (
+        <SongEditModal
+          song={drawnSong}
+          onClose={() => setIsEditModalOpen(false)}
+        />
       )}
 
       {markSongPlayedMutation.error && (

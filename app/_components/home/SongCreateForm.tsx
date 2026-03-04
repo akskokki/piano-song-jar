@@ -4,6 +4,7 @@ import {
   getSongsErrorMessage,
   useCreateSongMutation,
 } from '@/app/_hooks/songs';
+import { Button } from '@/app/_components/ui/Button';
 
 export function SongCreateForm() {
   const createSongMutation = useCreateSongMutation();
@@ -34,12 +35,9 @@ export function SongCreateForm() {
           maxLength={SONG_TITLE_MAX_LENGTH}
           className="h-10 flex-1 rounded-md border border-zinc-300 px-3 text-sm"
         />
-        <button
-          type="submit"
-          className="h-10 rounded-md bg-foreground px-4 text-sm font-medium text-background"
-        >
+        <Button type="submit" variant="solid">
           Add
-        </button>
+        </Button>
       </form>
 
       {createSongMutation.error && (

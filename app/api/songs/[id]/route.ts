@@ -44,3 +44,20 @@ export async function PATCH(request: Request, { params }: Params) {
 
   return NextResponse.json({ song });
 }
+
+export async function DELETE(_request: Request, { params }: Params) {
+  const { id } = await params;
+
+  const existingSong = await prisma.song.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+
+  if (!existingSong) {
+    return NextResponse.json({ error: 'Song not found' }, { status: 404 });
+  }
+
+  await prisma.song.delete({ where: { id } });
+
+  return NextResponse.json({ success: true });
+}

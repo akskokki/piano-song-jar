@@ -1,7 +1,5 @@
 {
   "prisma.pinToPrisma6": true,
   "css.lint.unknownAtRules": "warning",
-  "css.customData": [
-    ".vscode/css-custom-data.json"
-  ]
+  "css.customData": [".vscode/css-custom-data.json"]
 }

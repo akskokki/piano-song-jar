@@ -8,6 +8,7 @@ import {
 import { SONG_TITLE_MAX_LENGTH } from '@/lib/song.constants';
 import {
   createSong as createSongApi,
+  deleteSong,
   fetchSongs,
   markSongPlayed,
   updateSong,
@@ -142,6 +143,31 @@ export function useMarkSongPlayedMutation() {
     },
     onSuccess: (updatedSong) => {
       replaceSongInSongsCache(queryClient, updatedSong);
+    },
+  });
+}
+
+export function useDeleteSongMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { songId: string }, SongsRollbackContext>({
+    mutationFn: ({ songId }) => deleteSong(songId),
+    onMutate: async ({ songId }) => {
+      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list() });
+      const previousSongs = queryClient.getQueryData<Song[]>(
+        songsQueryKeys.list(),
+      );
+
+      setSongsCache(queryClient, (songs) =>
+        songs.filter((song) => song.id !== songId),
+      );
+
+      return { previousSongs };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousSongs) {
+        queryClient.setQueryData(songsQueryKeys.list(), context.previousSongs);
+      }
     },
   });
 }
