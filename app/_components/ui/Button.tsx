@@ -1,34 +1,38 @@
 import { ButtonHTMLAttributes, ReactNode } from "react"
 import clsx from "clsx"
+import { cva, type VariantProps } from "class-variance-authority"
 
-type ButtonVariant = "solid" | "outline" | "ghost"
-type ButtonSize = "sm" | "md" | "icon"
+const buttonStyles = cva(
+  "inline-flex items-center justify-center rounded-md text-sm transition-colors disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        solid: "bg-foreground font-medium text-background",
+        outline: "border border-zinc-300",
+        ghost: "text-zinc-300 hover:text-zinc-400",
+      },
+      size: {
+        sm: "h-8 px-3",
+        md: "h-10 px-4",
+        icon: "h-10 w-10 p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "outline",
+      size: "md",
+    },
+  },
+)
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: ButtonVariant
-  size?: ButtonSize
-  icon?: ReactNode
-  hitSlop?: number
-}
-
-const baseClasses =
-  "inline-flex items-center justify-center rounded-md text-sm transition-colors disabled:opacity-50"
-
-const variantClasses: Record<ButtonVariant, string> = {
-  solid: "bg-foreground font-medium text-background",
-  outline: "border border-zinc-300",
-  ghost: "text-zinc-500 hover:text-zinc-700",
-}
-
-const sizeClasses: Record<ButtonSize, string> = {
-  sm: "h-8 px-3",
-  md: "h-10 px-4",
-  icon: "h-10 w-10 p-0",
-}
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonStyles> & {
+    icon?: ReactNode
+    hitSlop?: number
+  }
 
 export function Button({
-  variant = "outline",
-  size = "md",
+  variant,
+  size,
   icon,
   hitSlop,
   className,
@@ -42,13 +46,11 @@ export function Button({
   return (
     <button
       type={type}
-      className={clsx(
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
-        !!hitSlop ? "relative" : undefined,
-        className,
-      )}
+      className={buttonStyles({
+        variant,
+        size,
+        className: clsx(!!hitSlop && "relative", className),
+      })}
       style={style}
       {...props}
     >

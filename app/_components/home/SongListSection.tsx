@@ -12,7 +12,7 @@ export function SongListSection() {
 
   return (
     <section className="rounded-lg border border-zinc-200 p-4">
-      <SongCreateForm className="mb-3" />
+      <SongCreateForm className="mb-4" />
 
       <button
         type="button"
@@ -38,25 +38,23 @@ export function SongListSection() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="overflow-hidden"
+            className="mt-3 overflow-hidden"
           >
-            <div className="mt-3">
-              {isPending ? (
-                <p className="text-sm text-zinc-500">Loading songs...</p>
-              ) : songs.length === 0 ? (
-                <p className="text-sm text-zinc-500">No songs yet.</p>
-              ) : (
-                <ul className="space-y-2">
-                  {songs.map((song) => (
-                    <SongListItem key={song.id} song={song} />
-                  ))}
-                </ul>
-              )}
+            {isPending ? (
+              <p className="text-sm text-zinc-500">Loading songs...</p>
+            ) : songs.length === 0 ? (
+              <p className="text-sm text-zinc-500">No songs yet.</p>
+            ) : (
+              <ul className="space-y-2">
+                {songs.map((song) => (
+                  <SongListItem key={song.id} song={song} />
+                ))}
+              </ul>
+            )}
 
-              {queryError && (
-                <p className="mt-3 text-sm text-red-600">{queryError}</p>
-              )}
-            </div>
+            {queryError && (
+              <p className="mt-3 text-sm text-red-600">{queryError}</p>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

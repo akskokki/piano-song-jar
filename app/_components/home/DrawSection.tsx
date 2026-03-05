@@ -73,20 +73,21 @@ export function DrawSection() {
   }
 
   return (
-    <section className="rounded-lg border border-zinc-200 p-4">
-      <h2 className="mb-3 text-sm font-medium">Draw random song</h2>
+    <section className="flex h-64 flex-col rounded-lg border border-zinc-200 p-4">
+      <h2 className="mb-2 text-sm font-medium">Draw random song</h2>
+
       {!drawnSong ? (
         <Button
           onClick={() => drawRandomSong()}
           disabled={songs.length === 0}
           variant="solid"
-          className="h-24 w-full text-base font-semibold"
+          className="w-full flex-1 text-base font-semibold"
         >
           Draw Song
         </Button>
       ) : (
-        <div className="mt-3 rounded-md border border-zinc-200 p-3">
-          <div className="flex items-center justify-between gap-2">
+        <div className="mt-3 flex flex-1 rounded-md border border-zinc-200 p-3">
+          <div className="flex w-full items-center justify-between gap-2">
             <Button
               onClick={skipDrawnSong}
               aria-label="Skip song"
@@ -99,15 +100,18 @@ export function DrawSection() {
               <p className="text-base font-medium wrap-break-word">
                 {drawnSong.title}
               </p>
-              <p className="mt-1 text-xs text-zinc-500">
+
+              <p className="mt-3 text-xs text-zinc-500">
                 {drawnSong.hands === 2 ? "🙌 2 hands" : "✋ 1 hand"}
               </p>
+
               <LastPlayedLabel lastPlayedAt={drawnSong.lastPlayedAt} />
+
               <Button
                 onClick={() => setIsEditModalOpen(true)}
                 variant="ghost"
                 size="sm"
-                className="mt-2 h-auto text-xs"
+                className="mt-4 h-auto text-xs"
                 hitSlop={8}
                 icon={<PencilIcon size={12} />}
               >
