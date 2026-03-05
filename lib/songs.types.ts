@@ -4,6 +4,7 @@ export type Song = {
   hands: 1 | 2
   lastPlayedAt: string | null
   lastSkippedAt: string | null
+  playedCount: number
   createdAt: string
 }
 

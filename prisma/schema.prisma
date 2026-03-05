@@ -15,10 +15,25 @@ datasource db {
 }
 
 model Song {
-  id           String    @id @default(cuid())
-  title        String
-  hands        Int       @default(2)
-  lastPlayedAt DateTime? @db.Timestamptz(3)
-  lastSkippedAt DateTime? @db.Timestamptz(3)
-  createdAt    DateTime  @default(now()) @db.Timestamptz(3)
+  id             String         @id @default(cuid())
+  title          String
+  hands          Int            @default(2)
+  createdAt      DateTime       @default(now()) @db.Timestamptz(3)
+  songActivities SongActivity[]
+}
+
+model SongActivity {
+  id        String           @id @default(cuid())
+  songId    String
+  type      SongActivityType
+  createdAt DateTime         @default(now()) @db.Timestamptz(3)
+  song      Song             @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@index([songId])
+  @@index([songId, type, createdAt])
+}
+
+enum SongActivityType {
+  played
+  skipped
 }

@@ -42,7 +42,6 @@ export function DrawSection() {
   const markSongActivityMutation = useMarkSongActivityMutation()
   const [drawnSongId, setDrawnSongId] = useState<string | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [previousSongId, setPreviousSongId] = useState<string | null>(null)
   const [transitionIntent, setTransitionIntent] =
     useState<DrawTransitionIntent>("default")
 
@@ -68,7 +67,6 @@ export function DrawSection() {
     excludeSongId?: string,
     intent: DrawTransitionIntent = "default",
   ) {
-    setPreviousSongId(drawnSongId)
     setTransitionIntent(intent)
     markSongActivityMutation.reset()
     setDrawnSongId(pickRandomSongId(excludeSongId))

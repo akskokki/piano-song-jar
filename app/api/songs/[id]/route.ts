@@ -3,6 +3,7 @@ import { SongResponse, SuccessResponse, ErrorResponse } from "@/lib/songs.types"
 import { toSong } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
 import { updateSongSchema } from "@/lib/songs.schemas"
+import { getActivityTimestampsBySongIds } from "@/lib/songs.activity"
 
 type Params = {
   params: Promise<{ id: string }>
@@ -37,7 +38,11 @@ export async function PATCH(request: Request, { params }: Params) {
     data: parsed.data,
   })
 
-  return NextResponse.json<SongResponse>({ song: toSong(song) })
+  const activityBySongId = await getActivityTimestampsBySongIds([song.id])
+
+  return NextResponse.json<SongResponse>({
+    song: toSong(song, activityBySongId[song.id]),
+  })
 }
 
 export async function DELETE(_request: Request, { params }: Params) {

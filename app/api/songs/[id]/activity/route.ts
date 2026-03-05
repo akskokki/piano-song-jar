@@ -3,6 +3,7 @@ import { SongResponse, ErrorResponse } from "@/lib/songs.types"
 import { toSong } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
 import { updateSongActivitySchema } from "@/lib/songs.schemas"
+import { getActivityTimestampsBySongIds } from "@/lib/songs.activity"
 
 type Params = {
   params: Promise<{ id: string }>
@@ -32,13 +33,17 @@ export async function POST(request: Request, { params }: Params) {
     )
   }
 
-  const song = await prisma.song.update({
-    where: { id },
-    data:
-      parsed.data.type === "played"
-        ? { lastPlayedAt: new Date() }
-        : { lastSkippedAt: new Date() },
+  await prisma.songActivity.create({
+    data: {
+      songId: id,
+      type: parsed.data.type,
+    },
   })
 
-  return NextResponse.json<SongResponse>({ song: toSong(song) })
+  const song = await prisma.song.findUniqueOrThrow({ where: { id } })
+  const activityBySongId = await getActivityTimestampsBySongIds([song.id])
+
+  return NextResponse.json<SongResponse>({
+    song: toSong(song, activityBySongId[song.id]),
+  })
 }

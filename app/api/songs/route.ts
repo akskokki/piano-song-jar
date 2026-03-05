@@ -3,13 +3,20 @@ import { SongResponse, SongsResponse, ErrorResponse } from "@/lib/songs.types"
 import { toSong, toSongs } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
 import { createSongSchema } from "@/lib/songs.schemas"
+import { getActivityTimestampsBySongIds } from "@/lib/songs.activity"
 
 export async function GET() {
   const songs = await prisma.song.findMany({
     orderBy: { createdAt: "desc" },
   })
 
-  return NextResponse.json<SongsResponse>({ songs: toSongs(songs) })
+  const activityBySongId = await getActivityTimestampsBySongIds(
+    songs.map((song) => song.id),
+  )
+
+  return NextResponse.json<SongsResponse>({
+    songs: toSongs(songs, activityBySongId),
+  })
 }
 
 export async function POST(request: Request) {
