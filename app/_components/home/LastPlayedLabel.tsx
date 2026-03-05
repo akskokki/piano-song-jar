@@ -1,3 +1,5 @@
+import { Text } from "@/app/_components/ui/Text"
+
 type LastPlayedLabelProps = {
   lastPlayedAt: string | null
   className?: string
@@ -50,9 +52,11 @@ function getLastPlayedString(lastPlayedAt: string | null) {
 
 export function LastPlayedLabel({
   lastPlayedAt,
-  className = "mt-1 text-xs text-zinc-500",
+  className = "mt-1",
 }: LastPlayedLabelProps) {
   return (
-    <p className={className}>Last played {getLastPlayedString(lastPlayedAt)}</p>
+    <Text variant="caption" tone="muted" className={className}>
+      Last played {getLastPlayedString(lastPlayedAt)}
+    </Text>
   )
 }

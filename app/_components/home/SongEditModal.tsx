@@ -13,6 +13,7 @@ import {
   useUpdateSongMutation,
 } from "@/app/_hooks/songs"
 import { Button } from "@/app/_components/ui/Button"
+import { Text } from "@/app/_components/ui/Text"
 import { Song } from "./types"
 
 type SongEditModalProps = {
@@ -172,9 +173,9 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         onKeyDown={handleDialogKeyDown}
         className="bg-background w-full max-w-md rounded-lg border border-zinc-200 p-4 shadow-sm"
       >
-        <h3 id={titleId} className="mb-3 text-sm font-medium">
+        <Text as="h3" id={titleId} variant="label" className="mb-3">
           Edit song
-        </h3>
+        </Text>
 
         <label
           htmlFor={`${titleId}-title`}
@@ -198,7 +199,9 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         />
 
         <div className="mt-3">
-          <p className="mb-1 text-xs text-zinc-600">Hands</p>
+          <Text variant="caption" tone="subtle" className="mb-1">
+            Hands
+          </Text>
           <Button
             onClick={() =>
               setEditingHands((current) => (current === 1 ? 2 : 1))
@@ -216,14 +219,14 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         </div>
 
         {(updateSongMutation.error || deleteSongMutation.error) && (
-          <p className="mt-3 text-sm text-red-600">
+          <Text variant="bodySm" tone="danger" className="mt-3">
             {getSongsErrorMessage(
               updateSongMutation.error ?? deleteSongMutation.error,
               updateSongMutation.error
                 ? "Could not update song"
                 : "Could not delete song",
             )}
-          </p>
+          </Text>
         )}
 
         <div className="mt-4 flex items-center justify-between gap-2">

@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react"
 import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
 import { getSongsErrorMessage, useCreateSongMutation } from "@/app/_hooks/songs"
 import { Button } from "@/app/_components/ui/Button"
+import { Text } from "@/app/_components/ui/Text"
 
 export function SongCreateForm({ className }: { className?: string }) {
   const createSongMutation = useCreateSongMutation()
@@ -29,7 +30,9 @@ export function SongCreateForm({ className }: { className?: string }) {
 
   return (
     <div className={className}>
-      <h2 className="mb-3 text-sm font-medium">Add new song</h2>
+      <Text as="h2" variant="label" className="mb-3">
+        Add new song
+      </Text>
 
       <form onSubmit={handleCreateSong} className="flex gap-2">
         <input
@@ -52,12 +55,12 @@ export function SongCreateForm({ className }: { className?: string }) {
       </form>
 
       {createSongMutation.error && (
-        <p className="mb-3 text-sm text-red-600">
+        <Text variant="bodySm" tone="danger" className="mb-3">
           {getSongsErrorMessage(
             createSongMutation.error,
             "Could not create song",
           )}
-        </p>
+        </Text>
       )}
     </div>
   )

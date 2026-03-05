@@ -6,6 +6,7 @@ import {
 } from "@/app/_hooks/songs"
 import { useMemo, useState } from "react"
 import { Button } from "@/app/_components/ui/Button"
+import { Text } from "@/app/_components/ui/Text"
 import { LastPlayedLabel } from "./LastPlayedLabel"
 import { SongEditModal } from "./SongEditModal"
 
@@ -74,7 +75,9 @@ export function DrawSection() {
 
   return (
     <section className="flex h-64 flex-col rounded-lg border border-zinc-200 p-4">
-      <h2 className="mb-2 text-sm font-medium">Draw random song</h2>
+      <Text as="h2" variant="label" className="mb-2">
+        Draw random song
+      </Text>
 
       {!drawnSong ? (
         <Button
@@ -97,13 +100,13 @@ export function DrawSection() {
             ></Button>
 
             <div className="min-w-0 flex-1 px-2 text-center">
-              <p className="text-base font-medium wrap-break-word">
+              <Text className="font-medium wrap-break-word">
                 {drawnSong.title}
-              </p>
+              </Text>
 
-              <p className="mt-3 text-xs text-zinc-500">
+              <Text variant="caption" tone="muted" className="mt-3">
                 {drawnSong.hands === 2 ? "🙌 2 hands" : "✋ 1 hand"}
-              </p>
+              </Text>
 
               <LastPlayedLabel lastPlayedAt={drawnSong.lastPlayedAt} />
 
@@ -138,12 +141,12 @@ export function DrawSection() {
       )}
 
       {markSongActivityMutation.error && (
-        <p className="mt-3 text-sm text-red-600">
+        <Text variant="bodySm" tone="danger" className="mt-3">
           {getSongsErrorMessage(
             markSongActivityMutation.error,
             "Could not update song activity",
           )}
-        </p>
+        </Text>
       )}
     </section>
   )

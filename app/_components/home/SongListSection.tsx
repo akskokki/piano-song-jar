@@ -2,6 +2,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { useGetSongsQuery } from "@/app/_hooks/songs"
+import { Text } from "@/app/_components/ui/Text"
 import { SongCreateForm } from "./SongCreateForm"
 import { SongListItem } from "./SongListItem"
 
@@ -22,7 +23,9 @@ export function SongListSection() {
         title={songsExpanded ? "Collapse" : "Expand"}
         className="-m-4 flex h-auto w-[calc(100%+2rem)] items-center justify-between rounded-lg p-4 text-left text-inherit"
       >
-        <h2 className="text-sm font-medium">All songs ({songs.length})</h2>
+        <Text as="h2" variant="label">
+          All songs ({songs.length})
+        </Text>
         <motion.div
           animate={{ rotate: songsExpanded ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -41,9 +44,13 @@ export function SongListSection() {
             className="mt-3 overflow-hidden"
           >
             {isPending ? (
-              <p className="text-sm text-zinc-500">Loading songs...</p>
+              <Text variant="bodySm" tone="muted">
+                Loading songs...
+              </Text>
             ) : songs.length === 0 ? (
-              <p className="text-sm text-zinc-500">No songs yet.</p>
+              <Text variant="bodySm" tone="muted">
+                No songs yet.
+              </Text>
             ) : (
               <ul className="space-y-2">
                 {songs.map((song) => (
@@ -53,7 +60,9 @@ export function SongListSection() {
             )}
 
             {queryError && (
-              <p className="mt-3 text-sm text-red-600">{queryError}</p>
+              <Text variant="bodySm" tone="danger" className="mt-3">
+                {queryError}
+              </Text>
             )}
           </motion.div>
         )}
