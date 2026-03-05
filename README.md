@@ -1,5 +1,7 @@
 # Piano Song Jar
 
+WIP, this shit hella vibe coded
+
 Simple mobile-first app to store piano songs you know and draw one at random.
 
 ## Stack
