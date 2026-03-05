@@ -1,4 +1,4 @@
-import { CheckIcon, PencilIcon, XIcon } from "lucide-react"
+import { CheckIcon, PencilIcon, SkipForwardIcon } from "lucide-react"
 import {
   getSongsErrorMessage,
   useGetSongsQuery,
@@ -89,15 +89,15 @@ export function DrawSection() {
           Draw Song
         </Button>
       ) : (
-        <div className="mt-3 flex flex-1 rounded-md border border-zinc-200 p-3">
+        <div className="flex flex-1 rounded-md border border-zinc-200 p-3">
           <div className="flex w-full items-center justify-between gap-2">
             <Button
               onClick={skipDrawnSong}
               aria-label="Skip song"
               title="Skip"
               size="icon"
-              icon={<XIcon size={16} />}
-            ></Button>
+              icon={<SkipForwardIcon size={16} />}
+            />
 
             <div className="min-w-0 flex-1 px-2 text-center">
               <Text className="font-medium wrap-break-word">
@@ -128,7 +128,7 @@ export function DrawSection() {
               title="Played"
               size="icon"
               icon={<CheckIcon size={16} />}
-            ></Button>
+            />
           </div>
         </div>
       )}

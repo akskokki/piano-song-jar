@@ -12,7 +12,7 @@ export function SongListSection() {
   const [songsExpanded, setSongsExpanded] = useState(false)
 
   return (
-    <section className="rounded-lg border border-zinc-200 p-4">
+    <section className="rounded-lg border border-zinc-200 p-4 pb-0!">
       <SongCreateForm className="mb-4" />
 
       <button
@@ -21,7 +21,7 @@ export function SongListSection() {
         aria-expanded={songsExpanded}
         aria-label={songsExpanded ? "Collapse songs list" : "Expand songs list"}
         title={songsExpanded ? "Collapse" : "Expand"}
-        className="-m-4 flex h-auto w-[calc(100%+2rem)] items-center justify-between rounded-lg p-4 text-left text-inherit"
+        className="-m-4 mb-0! flex h-auto w-[calc(100%+2rem)] items-center justify-between rounded-lg p-4 text-left text-inherit"
       >
         <Text as="h2" variant="label">
           All songs ({songs.length})
@@ -37,11 +37,11 @@ export function SongListSection() {
       <AnimatePresence>
         {songsExpanded && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 1, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="mt-3 overflow-hidden"
+            exit={{ opacity: 1, height: 0 }}
+            transition={{ type: "tween", duration: 0.4, ease: "easeInOut" }}
+            className="overflow-hidden"
           >
             {isPending ? (
               <Text variant="bodySm" tone="muted">
