@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import { useGetSongsQuery } from "@/app/_hooks/songs"
 import { SongCreateForm } from "./SongCreateForm"
 import { SongListItem } from "./SongListItem"
@@ -11,53 +12,54 @@ export function SongListSection() {
 
   return (
     <section className="rounded-lg border border-zinc-200 p-4">
-      {songsExpanded ? (
-        <button
-          type="button"
-          onClick={() => setSongsExpanded(false)}
-          aria-expanded={songsExpanded}
-          aria-label="Collapse songs list"
-          title="Collapse"
-          className="-m-4 mb-0 flex h-auto w-[calc(100%+2rem)] items-center justify-between rounded-lg p-4 text-left text-inherit"
+      <SongCreateForm className="mb-3" />
+
+      <button
+        type="button"
+        onClick={() => setSongsExpanded(!songsExpanded)}
+        aria-expanded={songsExpanded}
+        aria-label={songsExpanded ? "Collapse songs list" : "Expand songs list"}
+        title={songsExpanded ? "Collapse" : "Expand"}
+        className="-m-4 flex h-auto w-[calc(100%+2rem)] items-center justify-between rounded-lg p-4 text-left text-inherit"
+      >
+        <h2 className="text-sm font-medium">All songs ({songs.length})</h2>
+        <motion.div
+          animate={{ rotate: songsExpanded ? 180 : 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
         >
-          <h2 className="text-sm font-medium">Songs ({songs.length})</h2>
-          <ChevronDownIcon size={20} className="rotate-180" />
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setSongsExpanded(true)}
-          aria-expanded={songsExpanded}
-          aria-label="Expand songs list"
-          title="Expand"
-          className="-m-4 flex h-auto w-[calc(100%+2rem)] items-center justify-between rounded-lg p-4 text-left text-inherit"
-        >
-          <h2 className="text-sm font-medium">Songs ({songs.length})</h2>
           <ChevronDownIcon size={20} />
-        </button>
-      )}
+        </motion.div>
+      </button>
 
-      {songsExpanded && (
-        <>
-          <SongCreateForm />
+      <AnimatePresence>
+        {songsExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 25 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3">
+              {isPending ? (
+                <p className="text-sm text-zinc-500">Loading songs...</p>
+              ) : songs.length === 0 ? (
+                <p className="text-sm text-zinc-500">No songs yet.</p>
+              ) : (
+                <ul className="space-y-2">
+                  {songs.map((song) => (
+                    <SongListItem key={song.id} song={song} />
+                  ))}
+                </ul>
+              )}
 
-          {isPending ? (
-            <p className="text-sm text-zinc-500">Loading songs...</p>
-          ) : songs.length === 0 ? (
-            <p className="text-sm text-zinc-500">No songs yet.</p>
-          ) : (
-            <ul className="space-y-2">
-              {songs.map((song) => (
-                <SongListItem key={song.id} song={song} />
-              ))}
-            </ul>
-          )}
-
-          {queryError && (
-            <p className="mt-3 text-sm text-red-600">{queryError}</p>
-          )}
-        </>
-      )}
+              {queryError && (
+                <p className="mt-3 text-sm text-red-600">{queryError}</p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

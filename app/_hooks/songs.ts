@@ -13,8 +13,11 @@ import {
   markSongActivity,
   updateSong,
 } from "@/lib/songs.api"
-import { songsQueryKeys } from "@/lib/songs.query-keys"
-import { Song, SongActivityType, SongUpdateInput } from "@/lib/songs.types"
+import { Song, SongActivityType, UpdateSongInput } from "@/lib/songs.types"
+
+const songsQueryKeys = {
+  list: ["songs", "list"] as const,
+} as const
 
 function getErrorMessage(error: unknown, fallbackMessage: string) {
   return error instanceof Error ? error.message : fallbackMessage
@@ -26,13 +29,13 @@ type SongsRollbackContext = {
 
 type UpdateSongVariables = {
   songId: string
-} & SongUpdateInput
+} & UpdateSongInput
 
 function setSongsCache(
   queryClient: QueryClient,
   updater: (songs: Song[]) => Song[],
 ) {
-  queryClient.setQueryData<Song[]>(songsQueryKeys.list(), (current = []) =>
+  queryClient.setQueryData<Song[]>(songsQueryKeys.list, (current = []) =>
     updater(current),
   )
 }
@@ -46,7 +49,7 @@ function replaceSongInSongsCache(queryClient: QueryClient, nextSong: Song) {
 function patchSongInSongsCache(
   queryClient: QueryClient,
   songId: string,
-  patch: SongUpdateInput,
+  patch: UpdateSongInput,
 ) {
   setSongsCache(queryClient, (songs) =>
     songs.map((song) =>
@@ -62,7 +65,7 @@ function patchSongInSongsCache(
 }
 
 export const songsListQueryOptions = queryOptions({
-  queryKey: songsQueryKeys.list(),
+  queryKey: songsQueryKeys.list,
   queryFn: fetchSongs,
 })
 
@@ -80,14 +83,14 @@ export function useCreateSongMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (title: string) => {
+    mutationFn: async ({ title, hands }: { title: string; hands?: 1 | 2 }) => {
       if (title.length > SONG_TITLE_MAX_LENGTH) {
         throw new Error(
           `Song title must be ${SONG_TITLE_MAX_LENGTH} characters or fewer`,
         )
       }
 
-      return createSongApi(title)
+      return createSongApi(title, hands)
     },
     onSuccess: (createdSong) => {
       setSongsCache(queryClient, (songs) => [createdSong, ...songs])
@@ -102,10 +105,10 @@ export function useUpdateSongMutation() {
     mutationFn: ({ songId, title, hands }) =>
       updateSong(songId, { title, hands }),
     onMutate: async ({ songId, title, hands }) => {
-      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list() })
+      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list })
 
       const previousSongs = queryClient.getQueryData<Song[]>(
-        songsQueryKeys.list(),
+        songsQueryKeys.list,
       )
 
       patchSongInSongsCache(queryClient, songId, { title, hands })
@@ -114,7 +117,7 @@ export function useUpdateSongMutation() {
     },
     onError: (_error, _variables, context) => {
       if (context?.previousSongs) {
-        queryClient.setQueryData(songsQueryKeys.list(), context.previousSongs)
+        queryClient.setQueryData(songsQueryKeys.list, context.previousSongs)
       }
     },
     onSuccess: (updatedSong) => {
@@ -139,16 +142,16 @@ export function useMarkSongActivityMutation() {
   >({
     mutationFn: ({ songId, type }) => markSongActivity(songId, type),
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list() })
+      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list })
       const previousSongs = queryClient.getQueryData<Song[]>(
-        songsQueryKeys.list(),
+        songsQueryKeys.list,
       )
 
       return { previousSongs }
     },
     onError: (_error, _variables, context) => {
       if (context?.previousSongs) {
-        queryClient.setQueryData(songsQueryKeys.list(), context.previousSongs)
+        queryClient.setQueryData(songsQueryKeys.list, context.previousSongs)
       }
     },
     onSuccess: (updatedSong) => {
@@ -163,9 +166,9 @@ export function useDeleteSongMutation() {
   return useMutation<void, Error, { songId: string }, SongsRollbackContext>({
     mutationFn: ({ songId }) => deleteSong(songId),
     onMutate: async ({ songId }) => {
-      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list() })
+      await queryClient.cancelQueries({ queryKey: songsQueryKeys.list })
       const previousSongs = queryClient.getQueryData<Song[]>(
-        songsQueryKeys.list(),
+        songsQueryKeys.list,
       )
 
       setSongsCache(queryClient, (songs) =>
@@ -176,7 +179,7 @@ export function useDeleteSongMutation() {
     },
     onError: (_error, _variables, context) => {
       if (context?.previousSongs) {
-        queryClient.setQueryData(songsQueryKeys.list(), context.previousSongs)
+        queryClient.setQueryData(songsQueryKeys.list, context.previousSongs)
       }
     },
   })

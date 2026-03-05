@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react"
+import { Trash2Icon, SaveIcon } from "lucide-react"
 import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
 import {
   useDeleteSongMutation,
@@ -231,7 +232,8 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
               void handleDelete()
             }}
             disabled={isPending}
-            className="px-3 text-red-600"
+            className="border-red-400! px-3 text-red-400"
+            icon={<Trash2Icon size={16} />}
           >
             {isDeleteConfirming ? "Confirm delete" : "Delete"}
           </Button>
@@ -257,6 +259,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
               }}
               disabled={isSaveDisabled}
               variant="solid"
+              icon={<SaveIcon size={16} />}
             >
               Save
             </Button>

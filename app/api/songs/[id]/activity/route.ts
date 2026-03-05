@@ -2,11 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { SongResponse, ErrorResponse } from "@/lib/songs.types"
 import { toSong } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
-import { z } from "zod"
-
-const updateSongActivitySchema = z.object({
-  type: z.union([z.literal("played"), z.literal("skipped")]),
-})
+import { updateSongActivitySchema } from "@/lib/songs.schemas"
 
 type Params = {
   params: Promise<{ id: string }>

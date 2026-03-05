@@ -1,14 +1,8 @@
 import { prisma } from "@/lib/prisma"
-import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
 import { SongResponse, SongsResponse, ErrorResponse } from "@/lib/songs.types"
 import { toSong, toSongs } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
-import { z } from "zod"
-
-const createSongSchema = z.object({
-  title: z.string().trim().min(1).max(SONG_TITLE_MAX_LENGTH),
-  hands: z.union([z.literal(1), z.literal(2)]).optional(),
-})
+import { createSongSchema } from "@/lib/songs.schemas"
 
 export async function GET() {
   const songs = await prisma.song.findMany({

@@ -3,9 +3,10 @@ import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
 import { getSongsErrorMessage, useCreateSongMutation } from "@/app/_hooks/songs"
 import { Button } from "@/app/_components/ui/Button"
 
-export function SongCreateForm() {
+export function SongCreateForm({ className }: { className?: string }) {
   const createSongMutation = useCreateSongMutation()
   const [songTitle, setSongTitle] = useState("")
+  const [hands, setHands] = useState<1 | 2>(2)
 
   async function handleCreateSong(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -15,16 +16,22 @@ export function SongCreateForm() {
     }
 
     try {
-      await createSongMutation.mutateAsync(nextTitle)
+      await createSongMutation.mutateAsync({ title: nextTitle, hands })
       setSongTitle("")
     } catch {
       return
     }
   }
 
+  function toggleHands() {
+    setHands(hands === 1 ? 2 : 1)
+  }
+
   return (
-    <>
-      <form onSubmit={handleCreateSong} className="mb-3 flex gap-2">
+    <div className={className}>
+      <h2 className="mb-3 text-sm font-medium">Add new song</h2>
+
+      <form onSubmit={handleCreateSong} className="flex gap-2">
         <input
           value={songTitle}
           onChange={(event) => setSongTitle(event.target.value)}
@@ -32,6 +39,13 @@ export function SongCreateForm() {
           maxLength={SONG_TITLE_MAX_LENGTH}
           className="h-10 flex-1 rounded-md border border-zinc-300 px-3 text-sm"
         />
+        <Button
+          onClick={toggleHands}
+          title={hands === 1 ? "1 hand" : "2 hands"}
+          variant="outline"
+        >
+          {hands === 1 ? "✋" : "🙌"}
+        </Button>
         <Button type="submit" variant="solid">
           Add
         </Button>
@@ -45,6 +59,6 @@ export function SongCreateForm() {
           )}
         </p>
       )}
-    </>
+    </div>
   )
 }

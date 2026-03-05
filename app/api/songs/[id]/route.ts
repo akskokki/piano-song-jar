@@ -1,18 +1,8 @@
 import { prisma } from "@/lib/prisma"
-import { SONG_TITLE_MAX_LENGTH } from "@/lib/song.constants"
 import { SongResponse, SuccessResponse, ErrorResponse } from "@/lib/songs.types"
 import { toSong } from "@/lib/songs.serializer"
 import { NextResponse } from "next/server"
-import { z } from "zod"
-
-const updateSongSchema = z
-  .object({
-    title: z.string().trim().min(1).max(SONG_TITLE_MAX_LENGTH).optional(),
-    hands: z.union([z.literal(1), z.literal(2)]).optional(),
-  })
-  .refine((data) => data.title !== undefined || data.hands !== undefined, {
-    message: "No update fields provided",
-  })
+import { updateSongSchema } from "@/lib/songs.schemas"
 
 type Params = {
   params: Promise<{ id: string }>

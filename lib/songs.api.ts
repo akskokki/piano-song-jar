@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios"
 import {
   SongActivityType,
-  SongUpdateInput,
+  UpdateSongInput,
   SongResponse,
   SongsResponse,
 } from "@/lib/songs.types"
@@ -31,10 +31,11 @@ export async function fetchSongs() {
   }
 }
 
-export async function createSong(title: string) {
+export async function createSong(title: string, hands?: 1 | 2) {
   try {
     const { data } = await apiClient.post<SongResponse>("/api/songs", {
       title,
+      hands,
     })
 
     return data.song
@@ -43,7 +44,7 @@ export async function createSong(title: string) {
   }
 }
 
-export async function updateSong(songId: string, data: SongUpdateInput) {
+export async function updateSong(songId: string, data: UpdateSongInput) {
   try {
     const { data: responseData } = await apiClient.patch<SongResponse>(
       `/api/songs/${songId}`,
