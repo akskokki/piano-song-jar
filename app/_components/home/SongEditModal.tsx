@@ -219,7 +219,7 @@ export function SongEditModal({ song, onClose }: SongEditModalProps) {
         </div>
 
         {(updateSongMutation.error || deleteSongMutation.error) && (
-          <Text variant="bodySm" tone="danger" className="mt-3">
+          <Text tone="danger" className="mt-3">
             {getSongsErrorMessage(
               updateSongMutation.error ?? deleteSongMutation.error,
               updateSongMutation.error

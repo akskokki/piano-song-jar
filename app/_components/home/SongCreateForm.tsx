@@ -55,7 +55,7 @@ export function SongCreateForm({ className }: { className?: string }) {
       </form>
 
       {createSongMutation.error && (
-        <Text variant="bodySm" tone="danger" className="mb-3">
+        <Text tone="danger" className="mb-3">
           {getSongsErrorMessage(
             createSongMutation.error,
             "Could not create song",

@@ -11,9 +11,7 @@ export default function Home() {
         <Text as="h1" variant="h2">
           Piano Song Jar
         </Text>
-        <Text variant="bodySm" tone="muted">
-          Save songs you know and draw one at random.
-        </Text>
+        <Text tone="muted">Save songs you know and draw one at random.</Text>
       </header>
 
       <DrawSection />

@@ -10,7 +10,6 @@ const textStyles = cva("text-zinc-100 wrap-break-word", {
       h2: "text-2xl font-semibold tracking-tight",
       h3: "text-xl font-semibold",
       body: "text-base",
-      bodySm: "text-sm",
       label: "text-sm font-medium",
       caption: "text-xs",
     },

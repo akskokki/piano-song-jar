@@ -141,7 +141,7 @@ export function DrawSection() {
       )}
 
       {markSongActivityMutation.error && (
-        <Text variant="bodySm" tone="danger" className="mt-3">
+        <Text tone="danger" className="mt-3">
           {getSongsErrorMessage(
             markSongActivityMutation.error,
             "Could not update song activity",

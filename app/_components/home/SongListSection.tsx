@@ -44,11 +44,11 @@ export function SongListSection() {
             className="overflow-hidden"
           >
             {isPending ? (
-              <Text variant="bodySm" tone="muted">
+              <Text  tone="muted">
                 Loading songs...
               </Text>
             ) : songs.length === 0 ? (
-              <Text variant="bodySm" tone="muted">
+              <Text  tone="muted">
                 No songs yet.
               </Text>
             ) : (
@@ -60,7 +60,7 @@ export function SongListSection() {
             )}
 
             {queryError && (
-              <Text variant="bodySm" tone="danger" className="mt-3">
+              <Text  tone="danger" className="mt-3">
                 {queryError}
               </Text>
             )}
